@@ -4,4 +4,5 @@
 *.log
 *.png
 # Ignore testing files
-# *.TESTSITES
+*.TESTSITES
+*.key
