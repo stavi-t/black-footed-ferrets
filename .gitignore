@@ -1,0 +1,7 @@
+# Ignore all text files
+*.txt
+# Ignore all image files
+*.log
+*.png
+# Ignore testing files
+# *.TESTSITES
