@@ -74,53 +74,116 @@ n_after <- nrow(df_blood_gene_IDS)
 # sites lost due to no annotation from site annotation script
 n_after-n_before
 
-# query files with gene IDs
+# gene IDs = query files
 ?gprofiler2::gost
 # running gprofiler2
-gost(query = c(blood_als_gene_IDS),
-               organism = "mpfuro",
-               domain_scope = "annotated",
-               correction_method="fdr",
-               user_threshold = 0.05,
-               numeric_ns = "ENTREZGENE_ACC",
-               sources = c("GO:BP", "GO:MF", "GO:CC"), 
-               as_short_link = TRUE)
+# output: list of result (data.frame) & metadata (list for manhattan plot and query metadata)
+blood_als_gprof <- gost(query = c(blood_als_gene_IDS),
+                   organism = "mpfuro",
+                   domain_scope = "annotated",
+                   correction_method="fdr",
+                   user_threshold = 0.05,
+                   numeric_ns = "ENTREZGENE_ACC",
+                   sources = c("GO:BP", "GO:MF", "GO:CC"), 
+                   as_short_link = FALSE)
+blood_als_gprof 
+blood_als_go_terms <- blood_als_gprof$result$term_id
 
-gost(query = c(sperm_als_gene_IDS),
-              organism = "mpfuro",
-              domain_scope = "annotated",
-              correction_method="fdr",
-              user_threshold = 0.05,
-              numeric_ns = "ENTREZGENE_ACC",
-              sources = c("GO:BP", "GO:MF", "GO:CC"), 
-              as_short_link = TRUE)
+sperm_als_gprof <- gost(query = c(sperm_als_gene_IDS),
+                   organism = "mpfuro",
+                   domain_scope = "annotated",
+                   correction_method="fdr",
+                   user_threshold = 0.05,
+                   numeric_ns = "ENTREZGENE_ACC",
+                   sources = c("GO:BP", "GO:MF", "GO:CC"), 
+                   as_short_link = FALSE)
 
-gost(query = c(testes_als_gene_IDS),
-              organism = "mpfuro",
-              domain_scope = "annotated",
-              correction_method="fdr",
-              user_threshold = 0.05,
-              numeric_ns = "ENTREZGENE_ACC",
-              sources = c("GO:BP", "GO:MF", "GO:CC"), 
-              as_short_link = TRUE)
+sperm_als_gprof 
+sperm_als_go_terms <- sperm_als_gprof$result$term_id
+ 
+testes_als_gprof <- gost(query = c(testes_als_gene_IDS),
+                    organism = "mpfuro",
+                    domain_scope = "annotated",
+                    correction_method="fdr",
+                    user_threshold = 0.05,
+                    numeric_ns = "ENTREZGENE_ACC",
+                    sources = c("GO:BP", "GO:MF", "GO:CC"), 
+                    as_short_link = FALSE)
 
-gost(query = c(sperm_count_gene_IDS),
-              organism = "mpfuro",
-              domain_scope = "annotated",
-              correction_method="fdr",
-              user_threshold = 0.05,
-              numeric_ns = "ENTREZGENE_ACC",
-              sources = c("GO:BP", "GO:MF", "GO:CC"), 
-              as_short_link = TRUE)
+testes_als_gprof 
+testes_als_go_terms <- testes_als_gprof$result$term_id
 
-gost(query = c(testes_firm_gene_IDS),
-              organism = "mpfuro",
-              domain_scope = "annotated",
-              correction_method="fdr",
-              user_threshold = 0.05,
-              numeric_ns = "ENTREZGENE_ACC",
-              sources = c("GO:BP", "GO:MF", "GO:CC"), 
-              as_short_link = TRUE)
+sperm_count_gprof <- gost(query = c(sperm_count_gene_IDS),
+                     organism = "mpfuro",
+                     domain_scope = "annotated",
+                     correction_method="fdr",
+                     user_threshold = 0.05,
+                     numeric_ns = "ENTREZGENE_ACC",
+                     sources = c("GO:BP", "GO:MF", "GO:CC"), 
+                     as_short_link = FALSE)
 
-# venn diagrams of GO terms - mpfuro (DF) genome
+sperm_count_gprof 
+sperm_count_go_terms <- sperm_count_gprof$result$term_id
+
+testes_firm_gprof <- gost(query = c(testes_firm_gene_IDS),
+                     organism = "mpfuro",
+                     domain_scope = "annotated",
+                     correction_method="fdr",
+                     user_threshold = 0.05,
+                     numeric_ns = "ENTREZGENE_ACC",
+                     sources = c("GO:BP", "GO:MF", "GO:CC"), 
+                     as_short_link = FALSE)
+
+testes_firm_gprof
+testes_firm_go_terms <- testes_firm_gprof$result$term_id
+ 
+# venn diagrams of GO term overlap - mpfuro (DF) genome
+venn.diagram(x=list(blood_als_go_terms,sperm_als_go_terms,testes_als_go_terms),
+             category.names=c("Blood","Sperm","Testes"),
+             filename="GO_MACAU_B_S_T_ALS_site_annt.png",
+             output=TRUE,
+             # circles
+             lwd=2,
+             lty="blank",
+             fill=c("brown4","lightsteelblue2","navajowhite3"),
+             # numbers
+             cex=1.5,
+             fonface="bold",
+             # set names
+             cat.cex=2,
+             cat.fontface = "bold",
+             cat.default.pos="outer")
+
+venn.diagram(x=list(sperm_als_go_terms,sperm_count_go_terms),
+             category.names=c("Sperm ALS","Sperm Count"),
+             filename="GO_MACAU_SPERM_site_annt.png",
+             output=TRUE,
+             # circles
+             lwd=2,
+             lty="blank",
+             fill=c("lightsteelblue2","lightsteelblue2"),
+             # numbers
+             cex=1.5,
+             fonface="bold",
+             # set names
+             cat.cex=1.5,
+             cat.fontface = "bold",
+             cat.default.pos="outer")
+
+venn.diagram(x=list(testes_als_go_terms,testes_firm_go_terms),
+             category.names=c("Testes ALS","Testes Firm"),
+             filename="GO_MACAU_TESTES_site_annt.png",
+             output=TRUE,
+             # circles
+             lwd=2,
+             lty="blank",
+             fill=c("navajowhite3","navajowhite3"),
+             # numbers
+             cex=1.5,
+             fonface="bold",
+             # set names
+             cat.cex=1.5,
+             cat.fontface = "bold",
+             cat.just=list(c(0,0) , c(1,0)),
+             cat.default.pos="outer")
 
